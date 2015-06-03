@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.jetbrains.teamcity:server-web-api:war:9.0.1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/teamcity/server-web-api/9.0.1/server-web-api-9.0.1.war!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/teamcity/server-web-api/9.0.1/server-web-api-9.0.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/teamcity/server-web-api/9.0.1/server-web-api-9.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

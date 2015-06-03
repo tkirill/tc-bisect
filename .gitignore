@@ -1,6 +1,6 @@
 ## Maven
 
-target/
+bisectPlugin/target/
 **/target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -9,4 +9,11 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
-.mvn/timing.properties
+bisectPlugin/.mvn/timing.properties
+
+## IDEA
+
+# User-specific stuff:
+bisectPlugin/.idea/workspace.xml
+bisectPlugin/.idea/tasks.xml
+bisectPlugin/.idea/dictionaries
