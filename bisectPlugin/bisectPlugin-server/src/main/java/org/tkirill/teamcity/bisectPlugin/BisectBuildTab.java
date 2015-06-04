@@ -16,7 +16,7 @@ public class BisectBuildTab extends BuildTab {
 
     @Override
     protected boolean isAvailableFor(@NotNull SBuild build) {
-        return build.getBuildStatus().isFailed();
+        return build.getBuildStatus().isFailed() && build.getContainingChanges().size() > 1;
     }
 
     @Override
