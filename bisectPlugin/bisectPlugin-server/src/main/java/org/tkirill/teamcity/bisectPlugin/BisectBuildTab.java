@@ -15,6 +15,11 @@ public class BisectBuildTab extends BuildTab {
     }
 
     @Override
+    protected boolean isAvailableFor(@NotNull SBuild build) {
+        return build.getBuildStatus().isFailed();
+    }
+
+    @Override
     protected void fillModel(@NotNull Map<String, Object> model, @NotNull SBuild build) {
 
     }
