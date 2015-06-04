@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <teamcity-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:shemas-jetbrains-com:teamcity-plugin-v1-xml">
   <info>
-    <name>bisectPlugin</name>
-    <display-name>bisectPlugin</display-name>
-    <version>@Version@</version>
-    <description>Plugin description</description>
-    <download-url>Plugin download URL</download-url>
-    <email>Plugin author e-mail</email>
+    <name>Bisect plugin</name>
+    <display-name>Bisect plugin</display-name>
+    <version>0.1</version>
+    <description>Finds first failed commit in a build with multiple commits.</description>
+    <email>tkirill128@gmail.com</email>
     <vendor>
-      <name>@VendorName@</name>
-      <url>@VendorURL@</url>
-      <logo>Plugin vendor logo URL</logo>
+      <name>Kirill Teplinskiy</name>
+      <url>http://tkirill.org</url>
+      <logo>https://avatars3.githubusercontent.com/u/4922699?v=3&amp;s=400</logo>
     </vendor>
   </info>
   <deployment use-separate-classloader="true" />
