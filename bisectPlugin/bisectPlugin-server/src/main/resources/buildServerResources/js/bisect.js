@@ -1,8 +1,11 @@
-(function (global) {
-    var Bisect = function (buildId) {
+(function () {
+    BS.Bisect = function (buildId) {
         var self = this;
 
+        console.log('Bisect creating: ', buildId, typeof buildId);
+
         self.run = function() {
+            //noinspection JSUnusedGlobalSymbols
             BS.ajaxRequest('/bisect/run.html', {
                 method: 'post',
                 parameters: {buildId: buildId},
@@ -20,7 +23,5 @@
         document.observe("dom:loaded", function() {
             self.bind();
         });
-    }
-
-    BS.Bisect = Bisect;
-})(this);
+    };
+})();

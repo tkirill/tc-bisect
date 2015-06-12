@@ -1,10 +1,17 @@
-<%@ taglib prefix="bs" tagdir="/WEB-INF/tags" %>
+<%@include file="/include.jsp" %>
 
-<script type="text/javascript">
-    new BS.Bisect();
-</script>
+<c:choose>
+    <c:when test="${isRunning}">
+        <p>Already running</p>
+    </c:when>
 
-<p>
-    Hello, World!
-    <button id="bisect-run">Run</button>
-</p>
+    <c:otherwise>
+        <script type="text/javascript">
+            new BS.Bisect(${buildId});
+        </script>
+
+        <p>
+            <button id="bisect-run">Run</button>
+        </p>
+    </c:otherwise>
+</c:choose>
