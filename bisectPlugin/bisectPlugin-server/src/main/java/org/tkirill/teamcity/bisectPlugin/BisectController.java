@@ -1,9 +1,12 @@
 package org.tkirill.teamcity.bisectPlugin;
 
 import jetbrains.buildServer.controllers.BaseFormXmlController;
+import jetbrains.buildServer.serverSide.CustomDataStorage;
+import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.web.openapi.WebControllerManager;
 import org.jdom.Element;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,12 +19,21 @@ public class BisectController extends BaseFormXmlController {
     }
 
     @Override
-    protected ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) {
+    protected ModelAndView doGet(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response) {
         return null;
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response, Element xmlResponse) {
+    protected void doPost(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Element xmlResponse) {
+        long buildId = Long.parseLong(request.getParameter("buildId"));
+        SBuild build = myServer.findBuildInstanceById(buildId);
+        if (build == null) {
+            response.setStatus(404);
+            return;
+        }
+
+        CustomDataStorage storage = build.getBuildType().getCustomDataStorage("bisectPlugin");
+        storage.putValue(String.valueOf(buildId), "running");
         response.setStatus(200);
 //        String buildId = request.getParameter("buildId");
 //        if (buildId != null) {
