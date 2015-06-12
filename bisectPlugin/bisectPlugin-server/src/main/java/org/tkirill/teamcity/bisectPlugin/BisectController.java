@@ -33,7 +33,14 @@ public class BisectController extends BaseFormXmlController {
         }
 
         CustomDataStorage storage = build.getBuildType().getCustomDataStorage("bisectPlugin");
-        storage.putValue(String.valueOf(buildId), "running");
+        BisectRepository repository = new BisectRepository(storage);
+        if (!repository.exists(buildId)) {
+            repository.create(buildId);
+        }
+
+
+//        storage.putValue(String.valueOf(buildId), "running");
+
         response.setStatus(200);
 //        String buildId = request.getParameter("buildId");
 //        if (buildId != null) {

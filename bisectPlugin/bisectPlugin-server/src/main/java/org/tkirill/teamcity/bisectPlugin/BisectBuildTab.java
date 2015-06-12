@@ -26,8 +26,8 @@ public class BisectBuildTab extends BuildTab {
     protected void fillModel(@NotNull Map<String, Object> model, @NotNull SBuild build) {
         model.put("buildId", build.getBuildId());
         CustomDataStorage storage = build.getBuildType().getCustomDataStorage("bisectPlugin");
-        String value = storage.getValue(String.valueOf(build.getBuildId()));
-        boolean isRunning = value != null && !value.isEmpty();
+        BisectRepository repository = new BisectRepository(storage);
+        boolean isRunning = repository.exists(build.getBuildId());
         model.put("isRunning", isRunning);
 //        BuildCustomizer buildCustomizer = customizerFactory.createBuildCustomizer(build.getBuildType(), null);
 //        buildCustomizer.setParameters(build.getBuildType().getParameters());
