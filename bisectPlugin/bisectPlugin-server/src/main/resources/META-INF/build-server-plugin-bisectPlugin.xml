@@ -2,4 +2,6 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans default-autowire="constructor">
     <bean class="org.tkirill.teamcity.bisectPlugin.BisectBuildTab"/>
+    <bean class="org.tkirill.teamcity.bisectPlugin.BisectController"/>
+    <bean class="org.tkirill.teamcity.bisectPlugin.AppServer"/>
 </beans>
