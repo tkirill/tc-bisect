@@ -10,15 +10,16 @@ public class Bisect {
 
     public Bisect(long buildId) {
         this.buildId = buildId;
-        setBuilds(new ArrayList<>());
+        builds = new ArrayList<>();
     }
 
     public List<BisectBuild> getBuilds() {
         return builds;
     }
 
+    @SuppressWarnings("unused")
     public void setBuilds(List<BisectBuild> builds) {
-        this.builds = builds;
+        this.builds = new ArrayList<>(builds);
     }
 
     public long getBuildId() {
@@ -31,5 +32,9 @@ public class Bisect {
 
     public void setIsFinished(boolean isFinished) {
         this.isFinished = isFinished;
+    }
+
+    public void addBuild(BisectBuild build) {
+        builds.add(build);
     }
 }

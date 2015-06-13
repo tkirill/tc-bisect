@@ -70,17 +70,13 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
             bisect.setIsFinished(true);
         } else {
             int nextMid = getMid(nextLeft, nextRight);
-            SVcsModification vcsModification = build.getContainingChanges().get(nextMid);
-            BuildCustomizer buildCustomizer = customizerFactory.createBuildCustomizer(build.getBuildType(), null);
-            buildCustomizer.setParameters(build.getBuildType().getParameters());
-            buildCustomizer.setChangesUpTo(vcsModification);
-            SQueuedBuild sQueuedBuild = buildCustomizer.createPromotion().addToQueue("bisect");
+            SQueuedBuild sQueuedBuild = queueBuild(build, nextMid);
             BisectBuild nextBuild = new BisectBuild();
             nextBuild.setLeft(nextLeft);
             nextBuild.setRight(nextRight);
             nextBuild.setBuildId(Long.parseLong(sQueuedBuild.getItemId()));
             logger.info("next build" + nextBuild.getBuildId() + ": " + nextBuild.getLeft() + " - " + nextBuild.getRight());
-            bisect.getBuilds().add(nextBuild);
+            bisect.addBuild(nextBuild);
         }
         try {
             logger.info("save build");
@@ -88,6 +84,14 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
         } catch (IOException e) {
             logger.info("save build error");
         }
+    }
+
+    private SQueuedBuild queueBuild(SBuild build, int nextMid) {
+        SVcsModification vcsModification = build.getContainingChanges().get(nextMid);
+        BuildCustomizer buildCustomizer = customizerFactory.createBuildCustomizer(build.getBuildType(), null);
+        buildCustomizer.setParameters(build.getBuildType().getParameters());
+        buildCustomizer.setChangesUpTo(vcsModification);
+        return buildCustomizer.createPromotion().addToQueue("bisect");
     }
 
     private int getMid(BisectBuild lastBuild) {
