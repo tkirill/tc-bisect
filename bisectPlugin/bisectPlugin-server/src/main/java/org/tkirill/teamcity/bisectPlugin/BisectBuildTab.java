@@ -1,17 +1,25 @@
 package org.tkirill.teamcity.bisectPlugin;
 
 import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor;
-import jetbrains.buildServer.serverSide.*;
+import jetbrains.buildServer.serverSide.BuildsManager;
+import jetbrains.buildServer.serverSide.CustomDataStorage;
+import jetbrains.buildServer.serverSide.SBuild;
+import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.web.openapi.BuildTab;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import jetbrains.buildServer.web.openapi.WebControllerManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class BisectBuildTab extends BuildTab {
-    public BisectBuildTab(WebControllerManager manager, BuildsManager buildManager, PluginDescriptor myDescriptor) {
+    private SBuildServer server;
+
+    public BisectBuildTab(WebControllerManager manager, BuildsManager buildManager, PluginDescriptor myDescriptor, SBuildServer server) {
         super("bisectBuildTab", "Bisect", manager, buildManager, myDescriptor.getPluginResourcesPath("BisectBuildTab.jsp"));
+        this.server = server;
         addJsFile(myDescriptor.getPluginResourcesPath("js/bisect.js"));
     }
 
@@ -36,5 +44,13 @@ public class BisectBuildTab extends BuildTab {
         BisectRepository repository = new BisectRepository(storage);
         Bisect bisect = repository.get(build.getBuildId());
         model.put("bisect", bisect);
+
+        List<SBuild> historyRecords = new ArrayList<>();
+        if (bisect != null) {
+            for (BisectBuild bisectBuild : bisect.getBuilds()) {
+                historyRecords.add(server.findBuildInstanceById(bisectBuild.getBuildId()));
+            }
+        }
+        model.put("historyRecords", historyRecords);
     }
 }
