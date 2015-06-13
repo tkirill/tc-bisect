@@ -4,4 +4,5 @@
     <bean class="org.tkirill.teamcity.bisectPlugin.BisectBuildTab"/>
     <bean class="org.tkirill.teamcity.bisectPlugin.BisectController"/>
     <bean class="org.tkirill.teamcity.bisectPlugin.AppServer"/>
+    <bean class="org.tkirill.teamcity.bisectPlugin.BisectBuildTrigger"/>
 </beans>

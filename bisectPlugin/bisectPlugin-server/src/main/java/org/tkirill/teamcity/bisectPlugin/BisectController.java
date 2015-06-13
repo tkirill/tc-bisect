@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class BisectController extends BaseFormXmlController {
     public BisectController(SBuildServer server, WebControllerManager manager) {
@@ -35,20 +36,13 @@ public class BisectController extends BaseFormXmlController {
         CustomDataStorage storage = build.getBuildType().getCustomDataStorage("bisectPlugin");
         BisectRepository repository = new BisectRepository(storage);
         if (!repository.exists(buildId)) {
-            repository.create(buildId);
+            try {
+                repository.create(buildId);
+            } catch (IOException e) {
+                response.setStatus(500);
+                return;
+            }
         }
-
-
-//        storage.putValue(String.valueOf(buildId), "running");
-
         response.setStatus(200);
-//        String buildId = request.getParameter("buildId");
-//        if (buildId != null) {
-//            if (storage.getValue("bisect-plugin-build-" + buildId) != null) {
-//                response.setStatus(400);
-//                return;
-//            }
-//            storage.putValue("bisect-plugin-build-" + buildId, "started");
-//        }
     }
 }

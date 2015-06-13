@@ -4,7 +4,11 @@ import jetbrains.buildServer.serverSide.CustomDataStorage;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -58,6 +62,19 @@ public class BisectRepositoryTest {
     public void Create_Always_CallsStorage() throws Exception {
         sut.create(10);
 
-        verify(storage).putValue("10", "{\"buildId\":10}");
+        verify(storage).putValue("10", "{\"buildId\":10,\"builds\":[],\"isFinished\":false}");
+    }
+
+    @Test
+    public void GetAllNotFinished_InvalidJson_ReturnsEmpty() throws Exception {
+        Map<String, String> values = new HashMap<>();
+        values.put("10", "{foo: 3}");
+        values.put("11", "{buildId: }");
+        values.put("12", "");
+        stub(storage.getValues()).toReturn(values);
+
+        Bisect[] actual = sut.getAllNotFinished();
+
+        assertEquals(actual.length, 0);
     }
 }
