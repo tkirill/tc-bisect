@@ -2,15 +2,34 @@ package org.tkirill.teamcity.bisectPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Bisect {
+    private long buildId;
+    private List<BisectBuild> builds;
+    private boolean isFinished;
+
     public Bisect(long buildId) {
         this.buildId = buildId;
-        builds = new ArrayList<>();
+        setBuilds(new ArrayList<>());
     }
 
-    public long buildId;
-    public List<BisectBuild> builds;
-    public boolean isFinished;
+    public List<BisectBuild> getBuilds() {
+        return builds;
+    }
+
+    public void setBuilds(List<BisectBuild> builds) {
+        this.builds = builds;
+    }
+
+    public long getBuildId() {
+        return buildId;
+    }
+
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    public void setIsFinished(boolean isFinished) {
+        this.isFinished = isFinished;
+    }
 }

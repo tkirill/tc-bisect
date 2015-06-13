@@ -25,7 +25,6 @@ public class BisectRepository {
 
     public void create(long buildId) throws IOException {
         Bisect bisect = new Bisect(buildId);
-        bisect.buildId = buildId;
         String json = gson.toJson(bisect);
         storage.putValue(String.valueOf(buildId), json);
     }
@@ -36,12 +35,21 @@ public class BisectRepository {
         Map<String, String> values = storage.getValues();
         for (String key : values.keySet()) {
             Bisect bisect = tryParse(values.get(key));
-            if (bisect != null && !bisect.isFinished) {
+            if (bisect != null && !bisect.isFinished()) {
                 result.add(bisect);
             }
         }
 
         return result.toArray(new Bisect[result.size()]);
+    }
+
+    public Bisect get(long buildId) {
+        return tryParse(storage.getValue(String.valueOf(buildId)));
+    }
+
+    public void save(Bisect bisect) throws IOException {
+        String json = gson.toJson(bisect);
+        storage.putValue(String.valueOf(bisect.getBuildId()), json);
     }
 
     private Bisect tryParse(String json) {
@@ -54,10 +62,5 @@ public class BisectRepository {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public void save(Bisect bisect) throws IOException {
-        String json = gson.toJson(bisect);
-        storage.putValue(String.valueOf(bisect.buildId), json);
     }
 }

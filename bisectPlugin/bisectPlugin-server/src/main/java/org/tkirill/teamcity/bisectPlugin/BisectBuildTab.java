@@ -1,5 +1,6 @@
 package org.tkirill.teamcity.bisectPlugin;
 
+import jetbrains.buildServer.buildTriggers.BuildTriggerDescriptor;
 import jetbrains.buildServer.serverSide.*;
 import jetbrains.buildServer.web.openapi.BuildTab;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
@@ -16,8 +17,16 @@ public class BisectBuildTab extends BuildTab {
 
     @Override
     protected boolean isAvailableFor(@NotNull SBuild build) {
-        //TODO check for BisectBuildTrigger in configuration
-        return build.getBuildStatus().isFailed() && build.getContainingChanges().size() > 1;
+        //TODO check that previous change is successful
+        BuildTriggerDescriptor bisectBuildTrigger = build.getBuildType().findTriggerById("bisectBuildTrigger");
+        CustomDataStorage storage = build.getBuildType().getCustomDataStorage("bisectPlugin");
+        BisectRepository repository = new BisectRepository(storage);
+
+        boolean hasBisectBuildTrigger = bisectBuildTrigger != null;
+        boolean failedBuild = build.getBuildStatus().isFailed();
+        boolean multipleChanges = build.getContainingChanges().size() > 1;
+        boolean hasBisect = repository.exists(build.getBuildId());
+        return (hasBisectBuildTrigger && failedBuild && multipleChanges) || hasBisect;
     }
 
     @Override
@@ -25,7 +34,7 @@ public class BisectBuildTab extends BuildTab {
         model.put("buildId", build.getBuildId());
         CustomDataStorage storage = build.getBuildType().getCustomDataStorage("bisectPlugin");
         BisectRepository repository = new BisectRepository(storage);
-        boolean isRunning = repository.exists(build.getBuildId());
-        model.put("isRunning", isRunning);
+        Bisect bisect = repository.get(build.getBuildId());
+        model.put("bisect", bisect);
     }
 }

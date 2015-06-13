@@ -98,6 +98,6 @@ public class BisectRepositoryTest {
         Bisect[] actual = sut.getAllNotFinished();
 
         assertEquals(actual.length, 1);
-        assertEquals(actual[0].buildId, 10);
+        assertEquals(actual[0].getBuildId(), 10);
     }
 }

@@ -30,11 +30,11 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
         Bisect[] notFinished = repository.getAllNotFinished();
         logger.info("notFinished: " + notFinished.length);
         for (Bisect bisect : notFinished) {
-            logger.info("bisect start " + bisect.buildId);
-            if (bisect.builds.size() != 0) {
+            logger.info("bisect start " + bisect.getBuildId());
+            if (bisect.getBuilds().size() != 0) {
                 logger.info("bisect has builds");
-                BisectBuild lastBuild = bisect.builds.get(bisect.builds.size() - 1);
-                SBuild build = server.findBuildInstanceById(lastBuild.buildId);
+                BisectBuild lastBuild = bisect.getBuilds().get(bisect.getBuilds().size() - 1);
+                SBuild build = server.findBuildInstanceById(lastBuild.getBuildId());
                 if (build != null) {
                     if (build.isFinished()) {
                         logger.info("previous build finished");
@@ -42,23 +42,23 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
                             logger.info("previous build success");
                             int mid = getMid(lastBuild);
                             int nextLeft = mid + 1;
-                            int nextRight = lastBuild.right;
+                            int nextRight = lastBuild.getRight();
                             nextBuild(repository, bisect, build, nextLeft, nextRight);
                         } else {
                             logger.info("previous build fail");
                             int mid = getMid(lastBuild);
-                            nextBuild(repository, bisect, build, lastBuild.left, mid);
+                            nextBuild(repository, bisect, build, lastBuild.getLeft(), mid);
                         }
                     }
                 } else {
-                    logger.warn("Unknown build " + lastBuild.buildId);
+                    logger.warn("Unknown build " + lastBuild.getBuildId());
                 }
             } else {
                 logger.info("bisect hasn't builds");
-                SBuild build= server.findBuildInstanceById(bisect.buildId);
+                SBuild build= server.findBuildInstanceById(bisect.getBuildId());
                 nextBuild(repository, bisect, build, 0, build.getContainingChanges().size());
             }
-            logger.info("bisect finish " + bisect.buildId);
+            logger.info("bisect finish " + bisect.getBuildId());
         }
         logger.info("triggerBuild finish");
     }
@@ -67,7 +67,7 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
         logger.info("nextBuild " + nextLeft + " - " + nextRight);
         if (nextRight <= nextLeft) {
             logger.info("bisect DONE!");
-            bisect.isFinished = true;
+            bisect.setIsFinished(true);
         } else {
             int nextMid = getMid(nextLeft, nextRight);
             SVcsModification vcsModification = build.getContainingChanges().get(nextMid);
@@ -76,11 +76,11 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
             buildCustomizer.setChangesUpTo(vcsModification);
             SQueuedBuild sQueuedBuild = buildCustomizer.createPromotion().addToQueue("bisect");
             BisectBuild nextBuild = new BisectBuild();
-            nextBuild.left = nextLeft;
-            nextBuild.right = nextRight;
-            nextBuild.buildId = Long.parseLong(sQueuedBuild.getItemId());
-            logger.info("next build" + nextBuild.buildId + ": " + nextBuild.left + " - " + nextBuild.right);
-            bisect.builds.add(nextBuild);
+            nextBuild.setLeft(nextLeft);
+            nextBuild.setRight(nextRight);
+            nextBuild.setBuildId(Long.parseLong(sQueuedBuild.getItemId()));
+            logger.info("next build" + nextBuild.getBuildId() + ": " + nextBuild.getLeft() + " - " + nextBuild.getRight());
+            bisect.getBuilds().add(nextBuild);
         }
         try {
             logger.info("save build");
@@ -91,7 +91,7 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
     }
 
     private int getMid(BisectBuild lastBuild) {
-        return getMid(lastBuild.left, lastBuild.right);
+        return getMid(lastBuild.getLeft(), lastBuild.getRight());
     }
 
     private int getMid(int left, int right) {
