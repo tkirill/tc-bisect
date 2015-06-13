@@ -6,10 +6,12 @@ import jetbrains.buildServer.serverSide.CustomDataStorage;
 
 public class BisectRepository {
 
+    private final Gson gson;
     private CustomDataStorage storage;
 
     public BisectRepository(CustomDataStorage storage) {
         this.storage = storage;
+        gson = new Gson();
     }
 
     public boolean exists(long buildId) {
@@ -19,7 +21,7 @@ public class BisectRepository {
         }
 
         try {
-            new Gson().fromJson(value, Bisect.class);
+            gson.fromJson(value, Bisect.class);
         } catch (JsonParseException e) {
             return false;
         }
@@ -27,5 +29,9 @@ public class BisectRepository {
     }
 
     public void create(long buildId) {
+        Bisect bisect = new Bisect();
+        bisect.buildId = buildId;
+        String json = gson.toJson(bisect);
+        storage.putValue(String.valueOf(buildId), json);
     }
 }
