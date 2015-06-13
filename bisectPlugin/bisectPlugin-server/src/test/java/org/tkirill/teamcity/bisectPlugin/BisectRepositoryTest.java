@@ -77,4 +77,27 @@ public class BisectRepositoryTest {
 
         assertEquals(actual.length, 0);
     }
+
+    @Test
+    public void GetAllNotFinished_Finished_ReturnsEmpty() throws Exception {
+        Map<String, String> values = new HashMap<>();
+        values.put("10", "{\"buildId\":10,\"builds\":[],\"isFinished\":true}");
+        stub(storage.getValues()).toReturn(values);
+
+        Bisect[] actual = sut.getAllNotFinished();
+
+        assertEquals(actual.length, 0);
+    }
+
+    @Test
+    public void GetAllNotFinished_NotFinished_Returns() throws Exception {
+        Map<String, String> values = new HashMap<>();
+        values.put("10", "{\"buildId\":10,\"builds\":[],\"isFinished\":false}");
+        stub(storage.getValues()).toReturn(values);
+
+        Bisect[] actual = sut.getAllNotFinished();
+
+        assertEquals(actual.length, 1);
+        assertEquals(actual[0].buildId, 10);
+    }
 }
