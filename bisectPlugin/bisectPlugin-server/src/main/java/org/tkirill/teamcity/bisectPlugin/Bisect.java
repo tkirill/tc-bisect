@@ -8,6 +8,17 @@ public class Bisect {
     private List<BisectBuild> builds;
     private boolean isFinished;
 
+    public boolean isSolved() {
+        return solved;
+    }
+
+    public int getAnswer() {
+        return answer;
+    }
+
+    private boolean solved;
+    private int answer;
+
     public Bisect(long buildId) {
         this.buildId = buildId;
         builds = new ArrayList<>();
@@ -36,5 +47,13 @@ public class Bisect {
 
     public void addBuild(BisectBuild build) {
         builds.add(build);
+    }
+
+    public void setSolved(boolean solved) {
+        this.solved = solved;
+    }
+
+    public void setAnswer(int answer) {
+        this.answer = answer;
     }
 }

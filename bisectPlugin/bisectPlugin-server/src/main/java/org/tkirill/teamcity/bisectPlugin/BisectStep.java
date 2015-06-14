@@ -20,4 +20,8 @@ public class BisectStep {
     public int getMid() {
         return BisectBoundaryHelper.getMid(left, right);
     }
+
+    public int size() {
+        return right - left;
+    }
 }

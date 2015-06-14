@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.*;
 
 public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
     private static final Logger logger = Logger.getLogger(Loggers.SERVER_CATEGORY + BisectBuildTriggerPolicy.class);
@@ -31,25 +32,50 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
         logger.info("notFinished: " + notFinished.length);
         for (Bisect bisect : notFinished) {
             logger.info("bisect start " + bisect.getBuildId());
-            if (bisect.getBuilds().size() != 0) {
-                logger.info("bisect has builds");
-                BisectBuild lastBuild = bisect.getBuilds().get(bisect.getBuilds().size() - 1);
-                SBuild build = server.findBuildInstanceById(lastBuild.getBuildId());
-                if (build != null) {
-                    BisectStep nextStep = BisectBoundaryHelper.getNextStep(lastBuild.getLeft(), lastBuild.getRight(), build.getBuildStatus().isSuccessful());
-                    if (nextStep != null) {
-                        nextBuild(repository, bisect, build, nextStep);
-                    } else {
-                        logger.info("bisect DONE!");
-                    }
-                } else {
-                    logger.warn("Unknown build " + lastBuild.getBuildId());
+
+            List<Long> ids = new ArrayList<>();
+            for (BisectBuild bisectBuild : bisect.getBuilds()) {
+                ids.add(bisectBuild.getBuildId());
+            }
+
+            Collection<SFinishedBuild> entries = server.getHistory().findEntries(ids);
+            Map<Long, Boolean> history = new HashMap<>();
+            for (SFinishedBuild entry : entries) {
+                history.put(entry.getBuildId(), entry.getBuildStatus().isSuccessful());
+            }
+
+            List<BisectFinishedBuild> finishedBuilds = new ArrayList<>();
+            for (BisectBuild bisectBuild : bisect.getBuilds()) {
+                if (history.containsKey(bisectBuild.getBuildId())) {
+                    BisectFinishedBuild finishedBuild = new BisectFinishedBuild(bisectBuild.getLeft(), bisectBuild.getRight(), history.get(bisectBuild.getBuildId()));
+                    finishedBuilds.add(finishedBuild);
+                }
+            }
+
+            SBuild build= server.findBuildInstanceById(bisect.getBuildId());
+            BisectStep currentStep;
+            if (finishedBuilds.isEmpty()) {
+                currentStep = new BisectStep(0, build.getContainingChanges().size());
+            } else {
+                BisectFinishedBuild lastBuild = finishedBuilds.get(finishedBuilds.size() - 1);
+                currentStep = new BisectStep(lastBuild.getLeft(), lastBuild.getRight());
+            }
+            BisectDecision step = BisectHelper.getNextStep(finishedBuilds, currentStep);
+            if (step == null) {
+                bisect.setIsFinished(true);
+                bisect.setSolved(false);
+                try {
+                    repository.save(bisect);
+                } catch (IOException e) {
                 }
             } else {
-                logger.info("bisect hasn't builds");
-                SBuild build= server.findBuildInstanceById(bisect.getBuildId());
-                BisectStep firstStep = BisectBoundaryHelper.firstStep(build.getContainingChanges().size());
-                nextBuild(repository, bisect, build, firstStep);
+                if (step.isSolved()) {
+                    bisect.setIsFinished(true);
+                    bisect.setSolved(true);
+                    bisect.setAnswer(step.getAnswer());
+                } else {
+                    nextBuild(repository, bisect, build, step.getNextStep());
+                }
             }
             logger.info("bisect finish " + bisect.getBuildId());
         }

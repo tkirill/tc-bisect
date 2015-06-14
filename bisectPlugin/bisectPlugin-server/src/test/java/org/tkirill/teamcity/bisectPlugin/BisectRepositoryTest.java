@@ -62,7 +62,7 @@ public class BisectRepositoryTest {
     public void Create_Always_CallsStorage() throws Exception {
         sut.create(10);
 
-        verify(storage).putValue("10", "{\"buildId\":10,\"builds\":[],\"isFinished\":false}");
+        verify(storage).putValue("10", "{\"buildId\":10,\"builds\":[],\"isFinished\":false,\"solved\":false,\"answer\":0}");
     }
 
     @Test
