@@ -51,12 +51,12 @@ public class BisectBuildTab extends BuildTab {
             for (BisectBuild bisectBuild : bisect.getBuilds()) {
                 historyRecords.add(server.findBuildInstanceById(bisectBuild.getBuildId()));
             }
+
+            if (bisect.isFinished() && bisect.isSolved()) {
+                SVcsModification answer = server.getVcsHistory().findChangeById(bisect.getAnswerModification());
+                model.put("answer", answer);
+            }
         }
         model.put("historyRecords", historyRecords);
-
-        if (bisect.isFinished() && bisect.isSolved()) {
-            SVcsModification answer = build.getContainingChanges().get(bisect.getAnswer());
-            model.put("answer", answer);
-        }
     }
 }

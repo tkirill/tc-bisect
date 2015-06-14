@@ -40,14 +40,15 @@ public class BisectHelperTest {
     }
 
     @Test
-    public void GetNextStep_SuccessAndStepSizeTwoAndNoFailHistory_ReturnsNull() throws Exception {
+    public void GetNextStep_SuccessAndStepSizeTwoAndNoFailHistory_ReturnsAnswer() throws Exception {
         BisectStep currentStep = new BisectStep(0, 2);
         List<BisectFinishedBuild> history = new ArrayList<BisectFinishedBuild>();
         history.add(new BisectFinishedBuild(new BisectStep(0, 2), true));
 
         BisectDecision actual = BisectHelper.getNextStep(history, currentStep);
 
-        assertNull(actual);
+        assertTrue(actual.isSolved());
+        assertEquals(actual.getAnswer(), 0);
     }
 
     @Test
@@ -65,7 +66,7 @@ public class BisectHelperTest {
     }
 
     @Test
-    public void GetNextStep_SuccessAndStepSizeTwoAndHasFail_ReturnsLastFailed() throws Exception {
+    public void GetNextStep_SuccessAndStepSizeTwoAndHasFail_ReturnsAnswer() throws Exception {
         BisectStep currentStep = new BisectStep(0, 2);
         List<BisectFinishedBuild> history = new ArrayList<BisectFinishedBuild>();
         history.add(new BisectFinishedBuild(new BisectStep(0, 8), false));
@@ -75,11 +76,11 @@ public class BisectHelperTest {
         BisectDecision actual = BisectHelper.getNextStep(history, currentStep);
 
         assertTrue(actual.isSolved());
-        assertEquals(actual.getAnswer(), 2);
+        assertEquals(actual.getAnswer(), 0);
     }
 
     @Test
-    public void GetNextStep_SuccessAndStepSizeThree_ReturnsRight() throws Exception {
+    public void GetNextStep_SuccessAndStepSizeThree_ReturnsAnswer() throws Exception {
         BisectStep currentStep = new BisectStep(0, 3);
         List<BisectFinishedBuild> history = new ArrayList<BisectFinishedBuild>();
         history.add(new BisectFinishedBuild(new BisectStep(0, 12), false));
@@ -89,11 +90,11 @@ public class BisectHelperTest {
         BisectDecision actual = BisectHelper.getNextStep(history, currentStep);
 
         assertTrue(actual.isSolved());
-        assertEquals(actual.getAnswer(), 2);
+        assertEquals(actual.getAnswer(), 0);
     }
 
     @Test
-    public void GetNextStep_SuccessAndStepSizeFour_ReturnsRight() throws Exception {
+    public void GetNextStep_SuccessAndStepSizeFour_ReturnsLater() throws Exception {
         BisectStep currentStep = new BisectStep(0, 4);
         List<BisectFinishedBuild> history = new ArrayList<BisectFinishedBuild>();
         history.add(new BisectFinishedBuild(new BisectStep(0, 16), false));
@@ -102,8 +103,8 @@ public class BisectHelperTest {
 
         BisectDecision actual = BisectHelper.getNextStep(history, currentStep);
 
-        assertTrue(actual.isSolved());
-        assertEquals(actual.getAnswer(), 3);
+        assertFalse(actual.isSolved());
+        assertNextStep(actual, 0, 2);
     }
 
     @Test
@@ -117,7 +118,7 @@ public class BisectHelperTest {
         BisectDecision actual = BisectHelper.getNextStep(history, currentStep);
 
         assertFalse(actual.isSolved());
-        assertNextStep(actual, 3, 5);
+        assertNextStep(actual, 0, 2);
     }
 
     @Test
@@ -135,7 +136,7 @@ public class BisectHelperTest {
     }
 
     @Test
-    public void GetNextStep_FailAndStepSizeTwo_ReturnsOlder() throws Exception {
+    public void GetNextStep_FailAndStepSizeTwo_ReturnsAnswer() throws Exception {
         BisectStep currentStep = new BisectStep(0, 2);
         List<BisectFinishedBuild> history = new ArrayList<BisectFinishedBuild>();
         history.add(new BisectFinishedBuild(new BisectStep(0, 8), false));
@@ -144,8 +145,8 @@ public class BisectHelperTest {
 
         BisectDecision actual = BisectHelper.getNextStep(history, currentStep);
 
-        assertFalse(actual.isSolved());
-        assertNextStep(actual, 0, 1);
+        assertTrue(actual.isSolved());
+        assertEquals(actual.getAnswer(), 1);
     }
 
     private void assertNextStep(BisectDecision actual, int left, int right) {

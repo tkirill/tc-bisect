@@ -32,8 +32,17 @@ public class BisectBuildTriggerHelper {
         logger.info("bisect start " + bisect.getBuildId());
         SBuild build= server.findBuildInstanceById(bisect.getBuildId());
 
+        if (!bisect.getBuilds().isEmpty()) {
+            BisectBuild lastBuild = bisect.getBuilds().get(bisect.getBuilds().size() - 1);
+            boolean isFinished = server.findBuildInstanceById(lastBuild.getBuildId()).isFinished();
+            if (!isFinished) {
+                logger.info("last build not finished");
+                return;
+            }
+        }
         List<BisectFinishedBuild> finishedBuilds = getFinishedBuilds(bisect);
-        BisectStep currentStep = getCurrentStep(build, finishedBuilds);
+        BisectStep currentStep = getCurrentStep(bisect, finishedBuilds);
+        logger.info("current step: " + currentStep.getLeft() + " - " + currentStep.getRight());
         BisectDecision step = BisectHelper.getNextStep(finishedBuilds, currentStep);
 
         if (step == null) {
@@ -48,21 +57,24 @@ public class BisectBuildTriggerHelper {
     }
 
     private void bisectSolved(Bisect bisect, BisectDecision step) {
+        logger.info("bisect solved");
         bisect.setFinished(true);
         bisect.setSolved(true);
         bisect.setAnswer(step.getAnswer());
+        trySave(bisect);
     }
 
     private void bisectFailed(Bisect bisect) {
+
         bisect.setFinished(true);
         bisect.setSolved(false);
         trySave(bisect);
     }
 
     @NotNull
-    private BisectStep getCurrentStep(SBuild build, List<BisectFinishedBuild> finishedBuilds) {
+    private BisectStep getCurrentStep(Bisect bisect, List<BisectFinishedBuild> finishedBuilds) {
         if (finishedBuilds.isEmpty()) {
-            return new BisectStep(0, build.getContainingChanges().size());
+            return new BisectStep(0, bisect.getChanges().size());
         } else {
             BisectFinishedBuild lastBuild = finishedBuilds.get(finishedBuilds.size() - 1);
             return new BisectStep(lastBuild.getStep());
@@ -95,7 +107,7 @@ public class BisectBuildTriggerHelper {
     private void nextBuild(Bisect bisect, SBuild build, BisectStep nextStep) {
         logger.info("nextBuild " + nextStep.getLeft() + " - " + nextStep.getRight());
 
-        SQueuedBuild sQueuedBuild = queueBuild(build, nextStep.getMid());
+        SQueuedBuild sQueuedBuild = queueBuild(build, bisect, nextStep.getMid());
         BisectBuild nextBuild = new BisectBuild(Long.parseLong(sQueuedBuild.getItemId()), nextStep);
         logger.info("next build" + nextBuild.getBuildId() + ": " + nextBuild.getStep().getLeft() + " - " + nextBuild.getStep().getRight());
         bisect.addBuild(nextBuild);
@@ -103,8 +115,9 @@ public class BisectBuildTriggerHelper {
         trySave(bisect);
     }
 
-    private SQueuedBuild queueBuild(SBuild build, int nextMid) {
-        SVcsModification vcsModification = build.getContainingChanges().get(nextMid);
+    private SQueuedBuild queueBuild(SBuild build, Bisect bisect, int nextMid) {
+        Long changeId = bisect.getChanges().get(nextMid);
+        SVcsModification vcsModification = server.getVcsHistory().findChangeById(changeId);
         BuildCustomizer buildCustomizer = customizerFactory.createBuildCustomizer(build.getBuildType(), null);
         buildCustomizer.setParameters(build.getBuildType().getParameters());
         buildCustomizer.setChangesUpTo(vcsModification);

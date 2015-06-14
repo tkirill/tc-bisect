@@ -4,6 +4,7 @@ import jetbrains.buildServer.controllers.BaseFormXmlController;
 import jetbrains.buildServer.serverSide.CustomDataStorage;
 import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.serverSide.SBuildServer;
+import jetbrains.buildServer.vcs.SVcsModification;
 import jetbrains.buildServer.web.openapi.WebControllerManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BisectController extends BaseFormXmlController {
     public BisectController(SBuildServer server, WebControllerManager manager) {
@@ -37,12 +40,24 @@ public class BisectController extends BaseFormXmlController {
         BisectRepository repository = new BisectRepository(storage);
         if (!repository.exists(buildId)) {
             try {
-                repository.create(buildId);
+                Bisect bisect = new Bisect(buildId);
+                bisect.setChanges(getChangeIds(build));
+                repository.save(bisect);
             } catch (IOException e) {
                 response.setStatus(500);
                 return;
             }
         }
         response.setStatus(200);
+    }
+
+    private List<Long> getChangeIds(SBuild build) {
+        List<Long> result = new ArrayList<Long>();
+
+        for (SVcsModification modification : build.getContainingChanges()) {
+            result.add(modification.getId());
+        }
+
+        return result;
     }
 }

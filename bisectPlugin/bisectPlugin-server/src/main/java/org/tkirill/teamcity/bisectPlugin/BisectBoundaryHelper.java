@@ -15,13 +15,13 @@ public final class BisectBoundaryHelper {
     }
 
     private static BisectStep later(int left, int right) {
-        int nextLeft = getMid(left, right) + 1;
-        return checkBoundaries(nextLeft, right);
+        int nextRight = getMid(left, right);
+        return checkBoundaries(left, nextRight);
     }
 
     private static BisectStep earlier(int left, int right) {
-        int nextRight = getMid(left, right);
-        return checkBoundaries(left, nextRight);
+        int nextLeft = getMid(left, right) + 1;
+        return checkBoundaries(nextLeft, right);
     }
 
     @Nullable

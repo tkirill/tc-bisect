@@ -62,7 +62,7 @@ public class BisectRepositoryTest {
     public void Create_Always_CallsStorage() throws Exception {
         sut.create(10);
 
-        verify(storage).putValue("10", "{\"buildId\":10,\"builds\":[],\"isFinished\":false,\"solved\":false,\"answer\":0}");
+        verify(storage).putValue("10", "{\"buildId\":10,\"builds\":[],\"isFinished\":false,\"changes\":[],\"solved\":false,\"answer\":0}");
     }
 
     @Test
@@ -99,5 +99,15 @@ public class BisectRepositoryTest {
 
         assertEquals(actual.length, 1);
         assertEquals(actual[0].getBuildId(), 10);
+    }
+
+    @Test
+    public void Get_Exists_Returns() throws Exception {
+        stub(storage.getValue("10")).toReturn("{\"buildId\":10,\"builds\":[],\"isFinished\":true,\"changes\":[1, 2, 3],\"solved\":false,\"answer\":0}");
+
+        Bisect actual = sut.get(10);
+
+        assertEquals(actual.getChanges().size(), 3);
+        assertTrue(actual.isFinished());
     }
 }
