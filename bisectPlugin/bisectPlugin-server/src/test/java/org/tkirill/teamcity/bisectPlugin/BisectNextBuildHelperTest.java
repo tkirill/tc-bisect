@@ -7,121 +7,121 @@ import static org.testng.Assert.*;
 public class BisectNextBuildHelperTest {
     @Test
     public void GetNextStep_EmptyIntervalStartsFromZero_ReturnsNull() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(0, 0, true);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 0), true);
         assertNull(actual);
 
-        actual = BisectBoundaryHelper.getNextStep(0, 0, false);
+        actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 0), false);
         assertNull(actual);
     }
 
     @Test
     public void GetNextStep_EmptyIntervalStartsFromNonZero_ReturnsNull() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(1, 1, true);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(1, 1), true);
         assertNull(actual);
 
-        actual = BisectBoundaryHelper.getNextStep(1, 1, false);
+        actual = BisectBoundaryHelper.getNextStep(new BisectStep(1, 1), false);
         assertNull(actual);
     }
 
     @Test
     public void GetNextStep_IntervalLengthOneStartsFromZero_ReturnsNull() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(0, 1, true);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 1), true);
         assertNull(actual);
 
-        actual = BisectBoundaryHelper.getNextStep(0, 1, false);
+        actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 1), false);
         assertNull(actual);
     }
 
     @Test
     public void GetNextStep_IntervalLengthOneStartsFromNonZero_ReturnsNull() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(1, 2, true);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(1, 2), true);
         assertNull(actual);
 
-        actual = BisectBoundaryHelper.getNextStep(1, 2, false);
+        actual = BisectBoundaryHelper.getNextStep(new BisectStep(1, 2), false);
         assertNull(actual);
     }
 
     @Test
     public void GetNextStep_IntervalLengthTwoStartsFromZeroAndSuccess_ReturnsNull() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(0, 2, true);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 2), true);
         assertNull(actual);
     }
 
     @Test
     public void GetNextStep_IntervalLengthTwoStartsFromNonZeroAndSuccess_ReturnsNull() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(14, 16, true);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(14, 16), true);
         assertNull(actual);
     }
 
     @Test
     public void GetNextStep_OddIntervalStartsFromZeroAndSuccess_ReturnsLater() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(0, 3, true);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 3), true);
         assertBuildStep(actual, 2, 3);
 
-        actual = BisectBoundaryHelper.getNextStep(0, 11, true);
+        actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 11), true);
         assertBuildStep(actual, 6, 11);
     }
 
     @Test
     public void GetNextStep_OddIntervalStartsFromNonZeroAndSuccess_ReturnsLater() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(5, 8, true);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(5, 8), true);
         assertBuildStep(actual, 7, 8);
 
-        actual = BisectBoundaryHelper.getNextStep(14, 27, true);
+        actual = BisectBoundaryHelper.getNextStep(new BisectStep(14, 27), true);
         assertBuildStep(actual, 21, 27);
     }
 
     @Test
     public void GetNextStep_OddIntervalStartsFromZeroAndFail_ReturnsOlder() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(0, 3, false);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 3), false);
         assertBuildStep(actual, 0, 1);
 
-        actual = BisectBoundaryHelper.getNextStep(0, 17, false);
+        actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 17), false);
         assertBuildStep(actual, 0, 8);
     }
 
     @Test
     public void GetNextStep_OddIntervalStartsFromNonZeroAndFail_ReturnsOlder() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(6, 9, false);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(6, 9), false);
         assertBuildStep(actual, 6, 7);
 
-        actual = BisectBoundaryHelper.getNextStep(21, 46, false);
+        actual = BisectBoundaryHelper.getNextStep(new BisectStep(21, 46), false);
         assertBuildStep(actual, 21, 33);
     }
 
     @Test
     public void GetNextStep_EvenIntervalStartsFromZeroAndSuccess_ReturnsLater() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(0, 4, true);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 4), true);
         assertBuildStep(actual, 3, 4);
 
-        actual = BisectBoundaryHelper.getNextStep(0, 36, true);
+        actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 36), true);
         assertBuildStep(actual, 19, 36);
     }
 
     @Test
     public void GetNextStep_EvenIntervalStartsFromNonZeroAndSuccess_ReturnsLater() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(6, 10, true);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(6, 10), true);
         assertBuildStep(actual, 9, 10);
 
-        actual = BisectBoundaryHelper.getNextStep(12, 38, true);
+        actual = BisectBoundaryHelper.getNextStep(new BisectStep(12, 38), true);
         assertBuildStep(actual, 26, 38);
     }
 
     @Test
     public void GetNextStep_EvenIntervalStartsFromZeroAndFail_ReturnsOlder() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(0, 4, false);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 4), false);
         assertBuildStep(actual, 0, 2);
 
-        actual = BisectBoundaryHelper.getNextStep(0, 42, false);
+        actual = BisectBoundaryHelper.getNextStep(new BisectStep(0, 42), false);
         assertBuildStep(actual, 0, 21);
     }
 
     @Test
     public void GetNextStep_EvenIntervalStartsFromNonZeroAndFail_ReturnsOlder() throws Exception {
-        BisectStep actual = BisectBoundaryHelper.getNextStep(5, 9, false);
+        BisectStep actual = BisectBoundaryHelper.getNextStep(new BisectStep(5, 9), false);
         assertBuildStep(actual, 5, 7);
 
-        actual = BisectBoundaryHelper.getNextStep(16, 44, false);
+        actual = BisectBoundaryHelper.getNextStep(new BisectStep(16, 44), false);
         assertBuildStep(actual, 16, 30);
     }
 

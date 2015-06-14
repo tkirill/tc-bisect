@@ -47,7 +47,7 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
             List<BisectFinishedBuild> finishedBuilds = new ArrayList<BisectFinishedBuild>();
             for (BisectBuild bisectBuild : bisect.getBuilds()) {
                 if (history.containsKey(bisectBuild.getBuildId())) {
-                    BisectFinishedBuild finishedBuild = new BisectFinishedBuild(bisectBuild.getLeft(), bisectBuild.getRight(), history.get(bisectBuild.getBuildId()));
+                    BisectFinishedBuild finishedBuild = new BisectFinishedBuild(bisectBuild.getStep(), history.get(bisectBuild.getBuildId()));
                     finishedBuilds.add(finishedBuild);
                 }
             }
@@ -58,7 +58,7 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
                 currentStep = new BisectStep(0, build.getContainingChanges().size());
             } else {
                 BisectFinishedBuild lastBuild = finishedBuilds.get(finishedBuilds.size() - 1);
-                currentStep = new BisectStep(lastBuild.getLeft(), lastBuild.getRight());
+                currentStep = new BisectStep(lastBuild.getStep());
             }
             BisectDecision step = BisectHelper.getNextStep(finishedBuilds, currentStep);
             if (step == null) {
@@ -86,11 +86,8 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
         logger.info("nextBuild " + nextStep.getLeft() + " - " + nextStep.getRight());
 
         SQueuedBuild sQueuedBuild = queueBuild(build, nextStep.getMid());
-        BisectBuild nextBuild = new BisectBuild();
-        nextBuild.setLeft(nextStep.getLeft());
-        nextBuild.setRight(nextStep.getRight());
-        nextBuild.setBuildId(Long.parseLong(sQueuedBuild.getItemId()));
-        logger.info("next build" + nextBuild.getBuildId() + ": " + nextBuild.getLeft() + " - " + nextBuild.getRight());
+        BisectBuild nextBuild = new BisectBuild(Long.parseLong(sQueuedBuild.getItemId()), nextStep);
+        logger.info("next build" + nextBuild.getBuildId() + ": " + nextBuild.getStep().getLeft() + " - " + nextBuild.getStep().getRight());
         bisect.addBuild(nextBuild);
 
         try {

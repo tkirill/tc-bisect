@@ -6,8 +6,8 @@ public final class BisectBoundaryHelper {
     private BisectBoundaryHelper() {
     }
 
-    public static BisectStep getNextStep(int left, int right, boolean isSuccess) {
-        return isSuccess ? later(left, right) : earlier(left, right);
+    public static BisectStep getNextStep(BisectStep step, boolean isSuccess) {
+        return isSuccess ? later(step.getLeft(), step.getRight()) : earlier(step.getLeft(), step.getRight());
     }
 
     public static BisectStep firstStep(int number) {

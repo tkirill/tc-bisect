@@ -1,22 +1,16 @@
 package org.tkirill.teamcity.bisectPlugin;
 
 public class BisectFinishedBuild {
-    private int left;
-    private int right;
+    private BisectStep step;
     private boolean isSuccess;
 
-    public BisectFinishedBuild(int left, int right, boolean isSuccess) {
-        this.left = left;
-        this.right = right;
+    public BisectFinishedBuild(BisectStep step, boolean isSuccess) {
+        this.step = step;
         this.isSuccess = isSuccess;
     }
 
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
+    public BisectStep getStep() {
+        return step;
     }
 
     public boolean isSuccess() {
@@ -24,6 +18,6 @@ public class BisectFinishedBuild {
     }
 
     public int getMid() {
-        return new BisectStep(left, right).getMid();
+        return step.getMid();
     }
 }

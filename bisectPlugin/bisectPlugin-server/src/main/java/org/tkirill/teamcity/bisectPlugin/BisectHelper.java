@@ -22,7 +22,7 @@ public class BisectHelper {
 
         BisectFinishedBuild lastBuild = history.get(history.size() - 1);
         if (lastBuild.isSuccess()) {
-            BisectStep nextStep = BisectBoundaryHelper.getNextStep(lastBuild.getLeft(), lastBuild.getRight(), true);
+            BisectStep nextStep = BisectBoundaryHelper.getNextStep(lastBuild.getStep(), true);
             if (nextStep == null) {
                 BisectFinishedBuild lastFailed = null;
                 for (int i = history.size() - 1; i >= 0 ; i--) {
@@ -60,7 +60,7 @@ public class BisectHelper {
             result.setAnswer(currentStep.getMid());
             return result;
         }
-        BisectStep nextStep = BisectBoundaryHelper.getNextStep(lastBuild.getLeft(), lastBuild.getRight(), false);
+        BisectStep nextStep = BisectBoundaryHelper.getNextStep(lastBuild.getStep(), false);
         BisectDecision result = new BisectDecision();
         result.setSolved(false);
         result.setNextStep(nextStep);
