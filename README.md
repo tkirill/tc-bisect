@@ -9,7 +9,7 @@ Bisect operation itself is similar to bisect from Git ([doc](http://git-scm.com/
 
 This is how looks successful bisect for a failed build with 13 changes.  As you can see it requires only three checks, god bless binary search.
 
-//TODO paste link to the screenshot
+![Screenshot of successful bisect for a failed build with 13 changes](https://raw.githubusercontent.com/tkirill/tc-bisect/f04d094e5520433bb8e3af22a2eef3d94aba66aa/screenshot-13-changes.png)
 
 ## Requirements
 
