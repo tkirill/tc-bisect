@@ -40,15 +40,15 @@ public class BisectHelperTest {
     }
 
     @Test
-    public void GetNextStep_SuccessAndStepSizeTwoAndNoFailHistory_ReturnsAnswer() throws Exception {
+    public void GetNextStep_SuccessAndStepSizeTwoAndNoFailHistory_ReturnsLater() throws Exception {
         BisectStep currentStep = new BisectStep(0, 2);
         List<BisectFinishedBuild> history = new ArrayList<BisectFinishedBuild>();
         history.add(new BisectFinishedBuild(new BisectStep(0, 2), true));
 
         BisectDecision actual = BisectHelper.getNextStep(history, currentStep);
 
-        assertTrue(actual.isSolved());
-        assertEquals(actual.getAnswer(), 0);
+        assertFalse(actual.isSolved());
+        assertNextStep(actual, 0, 1);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class BisectHelperTest {
     }
 
     @Test
-    public void GetNextStep_SuccessAndStepSizeTwoAndHasFail_ReturnsAnswer() throws Exception {
+    public void GetNextStep_SuccessAndStepSizeTwoAndHasFail_ReturnsLater() throws Exception {
         BisectStep currentStep = new BisectStep(0, 2);
         List<BisectFinishedBuild> history = new ArrayList<BisectFinishedBuild>();
         history.add(new BisectFinishedBuild(new BisectStep(0, 8), false));
@@ -75,12 +75,12 @@ public class BisectHelperTest {
 
         BisectDecision actual = BisectHelper.getNextStep(history, currentStep);
 
-        assertTrue(actual.isSolved());
-        assertEquals(actual.getAnswer(), 0);
+        assertFalse(actual.isSolved());
+        assertNextStep(actual, 0, 1);
     }
 
     @Test
-    public void GetNextStep_SuccessAndStepSizeThree_ReturnsAnswer() throws Exception {
+    public void GetNextStep_SuccessAndStepSizeThree_ReturnsLater() throws Exception {
         BisectStep currentStep = new BisectStep(0, 3);
         List<BisectFinishedBuild> history = new ArrayList<BisectFinishedBuild>();
         history.add(new BisectFinishedBuild(new BisectStep(0, 12), false));
@@ -89,8 +89,8 @@ public class BisectHelperTest {
 
         BisectDecision actual = BisectHelper.getNextStep(history, currentStep);
 
-        assertTrue(actual.isSolved());
-        assertEquals(actual.getAnswer(), 0);
+        assertFalse(actual.isSolved());
+        assertNextStep(actual, 0, 1);
     }
 
     @Test

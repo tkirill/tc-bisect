@@ -28,19 +28,12 @@ public class BisectHelper {
                 }
             }
 
-            if (nextStep.size() == 1) {
-                return BisectDecision.solved(nextStep.getMid());
-            }
-
             BisectDecision result = new BisectDecision();
             result.setSolved(false);
             result.setNextStep(nextStep);
             return result;
         }
 
-        if (currentStep.size() == 1) {
-            return BisectDecision.solved(currentStep.getMid());
-        }
         BisectStep nextStep = BisectBoundaryHelper.getNextStep(lastBuild.getStep(), false);
         if (nextStep == null) {
             return BisectDecision.solved(currentStep.getMid());
