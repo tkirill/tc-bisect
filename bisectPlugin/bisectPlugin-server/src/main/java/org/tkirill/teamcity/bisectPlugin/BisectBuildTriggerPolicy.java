@@ -33,18 +33,18 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
         for (Bisect bisect : notFinished) {
             logger.info("bisect start " + bisect.getBuildId());
 
-            List<Long> ids = new ArrayList<>();
+            List<Long> ids = new ArrayList<Long>();
             for (BisectBuild bisectBuild : bisect.getBuilds()) {
                 ids.add(bisectBuild.getBuildId());
             }
 
             Collection<SFinishedBuild> entries = server.getHistory().findEntries(ids);
-            Map<Long, Boolean> history = new HashMap<>();
+            Map<Long, Boolean> history = new HashMap<Long, Boolean>();
             for (SFinishedBuild entry : entries) {
                 history.put(entry.getBuildId(), entry.getBuildStatus().isSuccessful());
             }
 
-            List<BisectFinishedBuild> finishedBuilds = new ArrayList<>();
+            List<BisectFinishedBuild> finishedBuilds = new ArrayList<BisectFinishedBuild>();
             for (BisectBuild bisectBuild : bisect.getBuilds()) {
                 if (history.containsKey(bisectBuild.getBuildId())) {
                     BisectFinishedBuild finishedBuild = new BisectFinishedBuild(bisectBuild.getLeft(), bisectBuild.getRight(), history.get(bisectBuild.getBuildId()));
@@ -62,7 +62,7 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
             }
             BisectDecision step = BisectHelper.getNextStep(finishedBuilds, currentStep);
             if (step == null) {
-                bisect.setIsFinished(true);
+                bisect.setFinished(true);
                 bisect.setSolved(false);
                 try {
                     repository.save(bisect);
@@ -70,7 +70,7 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
                 }
             } else {
                 if (step.isSolved()) {
-                    bisect.setIsFinished(true);
+                    bisect.setFinished(true);
                     bisect.setSolved(true);
                     bisect.setAnswer(step.getAnswer());
                 } else {

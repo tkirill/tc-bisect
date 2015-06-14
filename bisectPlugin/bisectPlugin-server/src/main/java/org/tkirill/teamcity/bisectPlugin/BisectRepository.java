@@ -30,7 +30,7 @@ public class BisectRepository {
     }
 
     public Bisect[] getAllNotFinished() {
-        List<Bisect> result = new ArrayList<>();
+        List<Bisect> result = new ArrayList<Bisect>();
 
         Map<String, String> values = storage.getValues();
         for (String key : values.keySet()) {

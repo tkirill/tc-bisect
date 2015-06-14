@@ -45,7 +45,7 @@ public class BisectBuildTab extends BuildTab {
         Bisect bisect = repository.get(build.getBuildId());
         model.put("bisect", bisect);
 
-        List<SBuild> historyRecords = new ArrayList<>();
+        List<SBuild> historyRecords = new ArrayList<SBuild>();
         if (bisect != null) {
             for (BisectBuild bisectBuild : bisect.getBuilds()) {
                 historyRecords.add(server.findBuildInstanceById(bisectBuild.getBuildId()));

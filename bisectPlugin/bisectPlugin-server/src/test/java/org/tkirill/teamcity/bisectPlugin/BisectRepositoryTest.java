@@ -13,7 +13,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public class BisectRepositoryTest {
-    CustomDataStorage storage;
+    private CustomDataStorage storage;
     private BisectRepository sut;
 
     @BeforeMethod
@@ -67,7 +67,7 @@ public class BisectRepositoryTest {
 
     @Test
     public void GetAllNotFinished_InvalidJson_ReturnsEmpty() throws Exception {
-        Map<String, String> values = new HashMap<>();
+        Map<String, String> values = new HashMap<String, String>();
         values.put("10", "{foo: 3}");
         values.put("11", "{buildId: }");
         values.put("12", "");
@@ -80,7 +80,7 @@ public class BisectRepositoryTest {
 
     @Test
     public void GetAllNotFinished_Finished_ReturnsEmpty() throws Exception {
-        Map<String, String> values = new HashMap<>();
+        Map<String, String> values = new HashMap<String, String>();
         values.put("10", "{\"buildId\":10,\"builds\":[],\"isFinished\":true}");
         stub(storage.getValues()).toReturn(values);
 
@@ -91,7 +91,7 @@ public class BisectRepositoryTest {
 
     @Test
     public void GetAllNotFinished_NotFinished_Returns() throws Exception {
-        Map<String, String> values = new HashMap<>();
+        Map<String, String> values = new HashMap<String, String>();
         values.put("10", "{\"buildId\":10,\"builds\":[],\"isFinished\":false}");
         stub(storage.getValues()).toReturn(values);
 

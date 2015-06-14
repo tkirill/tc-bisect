@@ -21,7 +21,7 @@ public class Bisect {
 
     public Bisect(long buildId) {
         this.buildId = buildId;
-        builds = new ArrayList<>();
+        builds = new ArrayList<BisectBuild>();
     }
 
     public List<BisectBuild> getBuilds() {
@@ -30,7 +30,7 @@ public class Bisect {
 
     @SuppressWarnings("unused")
     public void setBuilds(List<BisectBuild> builds) {
-        this.builds = new ArrayList<>(builds);
+        this.builds = new ArrayList<BisectBuild>(builds);
     }
 
     public long getBuildId() {
@@ -41,7 +41,7 @@ public class Bisect {
         return isFinished;
     }
 
-    public void setIsFinished(boolean isFinished) {
+    public void setFinished(boolean isFinished) {
         this.isFinished = isFinished;
     }
 
