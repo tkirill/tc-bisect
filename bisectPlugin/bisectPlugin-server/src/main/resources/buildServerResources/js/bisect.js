@@ -9,7 +9,7 @@
             BS.ajaxRequest('/bisect/run.html', {
                 method: 'post',
                 parameters: {buildId: buildId},
-                onSuccess: function () {alert("Success!");},
+                onSuccess: function () {window.location.reload(true);},  // TODO replace with AJAX
                 onFailure: function () {alert("Error!");}
             });
         };

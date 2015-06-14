@@ -38,6 +38,7 @@
             </c:choose>
         </c:if>
 
+        <h2>Builds</h2>
         <c:if test="${empty historyRecords}">
             <p>No builds available</p>
         </c:if>
