@@ -56,4 +56,10 @@ public class Bisect {
     public void setAnswer(int answer) {
         this.answer = answer;
     }
+
+    public List<Long> getBuildIds() {
+        List<Long> result = new ArrayList<Long>();
+        for (BisectBuild build : getBuilds()) result.add(build.getBuildId());
+        return result;
+    }
 }
