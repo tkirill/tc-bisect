@@ -36,19 +36,11 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
                 BisectBuild lastBuild = bisect.getBuilds().get(bisect.getBuilds().size() - 1);
                 SBuild build = server.findBuildInstanceById(lastBuild.getBuildId());
                 if (build != null) {
-                    if (build.isFinished()) {
-                        logger.info("previous build finished");
-                        if (build.getBuildStatus().isSuccessful()) {
-                            logger.info("previous build success");
-                            int mid = getMid(lastBuild);
-                            int nextLeft = mid + 1;
-                            int nextRight = lastBuild.getRight();
-                            nextBuild(repository, bisect, build, nextLeft, nextRight);
-                        } else {
-                            logger.info("previous build fail");
-                            int mid = getMid(lastBuild);
-                            nextBuild(repository, bisect, build, lastBuild.getLeft(), mid);
-                        }
+                    BisectStep nextStep = BisectBoundaryHelper.getNextStep(lastBuild.getLeft(), lastBuild.getRight(), build.getBuildStatus().isSuccessful());
+                    if (nextStep != null) {
+                        nextBuild(repository, bisect, build, nextStep);
+                    } else {
+                        logger.info("bisect DONE!");
                     }
                 } else {
                     logger.warn("Unknown build " + lastBuild.getBuildId());
@@ -56,28 +48,25 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
             } else {
                 logger.info("bisect hasn't builds");
                 SBuild build= server.findBuildInstanceById(bisect.getBuildId());
-                nextBuild(repository, bisect, build, 0, build.getContainingChanges().size());
+                BisectStep firstStep = BisectBoundaryHelper.firstStep(build.getContainingChanges().size());
+                nextBuild(repository, bisect, build, firstStep);
             }
             logger.info("bisect finish " + bisect.getBuildId());
         }
         logger.info("triggerBuild finish");
     }
 
-    private void nextBuild(BisectRepository repository, Bisect bisect, SBuild build, int nextLeft, int nextRight) {
-        logger.info("nextBuild " + nextLeft + " - " + nextRight);
-        if (nextRight <= nextLeft) {
-            logger.info("bisect DONE!");
-            bisect.setIsFinished(true);
-        } else {
-            int nextMid = getMid(nextLeft, nextRight);
-            SQueuedBuild sQueuedBuild = queueBuild(build, nextMid);
-            BisectBuild nextBuild = new BisectBuild();
-            nextBuild.setLeft(nextLeft);
-            nextBuild.setRight(nextRight);
-            nextBuild.setBuildId(Long.parseLong(sQueuedBuild.getItemId()));
-            logger.info("next build" + nextBuild.getBuildId() + ": " + nextBuild.getLeft() + " - " + nextBuild.getRight());
-            bisect.addBuild(nextBuild);
-        }
+    private void nextBuild(BisectRepository repository, Bisect bisect, SBuild build, BisectStep nextStep) {
+        logger.info("nextBuild " + nextStep.getLeft() + " - " + nextStep.getRight());
+
+        SQueuedBuild sQueuedBuild = queueBuild(build, nextStep.getMid());
+        BisectBuild nextBuild = new BisectBuild();
+        nextBuild.setLeft(nextStep.getLeft());
+        nextBuild.setRight(nextStep.getRight());
+        nextBuild.setBuildId(Long.parseLong(sQueuedBuild.getItemId()));
+        logger.info("next build" + nextBuild.getBuildId() + ": " + nextBuild.getLeft() + " - " + nextBuild.getRight());
+        bisect.addBuild(nextBuild);
+
         try {
             logger.info("save build");
             repository.save(bisect);
@@ -92,13 +81,5 @@ public class BisectBuildTriggerPolicy extends PolledBuildTrigger {
         buildCustomizer.setParameters(build.getBuildType().getParameters());
         buildCustomizer.setChangesUpTo(vcsModification);
         return buildCustomizer.createPromotion().addToQueue("bisect");
-    }
-
-    private int getMid(BisectBuild lastBuild) {
-        return getMid(lastBuild.getLeft(), lastBuild.getRight());
-    }
-
-    private int getMid(int left, int right) {
-        return left + (right - left) / 2;
     }
 }
