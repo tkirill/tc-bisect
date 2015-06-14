@@ -19,8 +19,9 @@ The plugin targets TeamCity 9 and wasn't tested with other versions at the momen
 
 Steps to install TeamCity plugin according to the [official documentation][tc-plugin-install-doc]:
 
-1. Shutdown the TeamCity server.
-2. Copy the zip archive with the plugin into the <TeamCity Data Directory>/plugins directory.
-3. Start the TeamCity server: the plugin files will be unpacked and processed automatically. The plugin will be available in the Plugins List in the Administration area.
+1. Download [latest release](https://github.com/tkirill/tc-bisect/releases/latest).
+2. Shutdown the TeamCity server.
+3. Copy the zip archive with the plugin into the <TeamCity Data Directory>/plugins directory.
+4. Start the TeamCity server: the plugin files will be unpacked and processed automatically. The plugin will be available in the Plugins List in the Administration area.
 
 [tc-plugin-install-doc]: https://confluence.jetbrains.com/display/TCD9/Installing+Additional+Plugins "Installing Additional Plugins"
