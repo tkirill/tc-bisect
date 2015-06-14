@@ -1,14 +1,43 @@
 <%@include file="/include.jsp" %>
 
+<bs:linkScript>
+    /js/bs/runningBuilds.js
+</bs:linkScript>
+
 <c:choose>
     <c:when test="${bisect != null}">
+        <h2>Status</h2>
         <c:choose>
-            <c:when test="${answer != null}">
+            <c:when test="${bisect.finished}">
                 <p>
-                    Answer: ${answer.version}
+                    <img src="/img/buildStates/buildSuccessful.png" class="icon">
+                    Done
                 </p>
             </c:when>
+            <c:otherwise>
+                <p>
+                    <img src="/img/buildStates/running_green_transparent.gif" class="icon">
+                    In progress.  Refresh page for seeing updates.
+                </p>
+            </c:otherwise>
         </c:choose>
+
+        <c:if test="${bisect.finished}">
+            <h2>Result</h2>
+            <c:choose>
+                <c:when test="${answer != null}">
+                    <p>
+                        First modification with failed build is <bs:modificationLink modification="${answer}">${answer.displayVersion}"</bs:modificationLink>.  Author: <bs:changeCommitters modification="${answer}"/>.
+                    </p>
+                </c:when>
+                <c:otherwise>
+                    <p>
+                        First modification with failed build wasn't found automatically.
+                    </p>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
+
         <c:if test="${empty historyRecords}">
             <p>No builds available</p>
         </c:if>
