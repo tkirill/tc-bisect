@@ -5,6 +5,7 @@ import jetbrains.buildServer.serverSide.BuildsManager;
 import jetbrains.buildServer.serverSide.CustomDataStorage;
 import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.serverSide.SBuildServer;
+import jetbrains.buildServer.vcs.SVcsModification;
 import jetbrains.buildServer.web.openapi.BuildTab;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import jetbrains.buildServer.web.openapi.WebControllerManager;
@@ -52,5 +53,10 @@ public class BisectBuildTab extends BuildTab {
             }
         }
         model.put("historyRecords", historyRecords);
+
+        if (bisect.isFinished() && bisect.isSolved()) {
+            SVcsModification answer = build.getContainingChanges().get(bisect.getAnswer());
+            model.put("answer", answer);
+        }
     }
 }

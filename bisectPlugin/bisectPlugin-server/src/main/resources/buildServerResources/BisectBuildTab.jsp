@@ -2,6 +2,13 @@
 
 <c:choose>
     <c:when test="${bisect != null}">
+        <c:choose>
+            <c:when test="${answer != null}">
+                <p>
+                    Answer: ${answer.version}
+                </p>
+            </c:when>
+        </c:choose>
         <c:if test="${empty historyRecords}">
             <p>No builds available</p>
         </c:if>
@@ -33,21 +40,22 @@
             <c:forEach var="entry" items="${historyRecords}" varStatus="recordStatus">
                 <jsp:useBean id="entry" type="jetbrains.buildServer.serverSide.SBuild"/>
 
-                <bs:buildRow build="${entry}" rowClass="${rowClass}"
-                             showBranchName="true"
-                             maxBranchNameLength="15"
-                             showBuildNumber="true"
-                             showStatus="true"
-                             showArtifacts="flase"
-                             showChanges="true"
-                             showStartDate="true"
-                             showDuration="true"
-                             showProgress="true"
-                             showStop="false"
-                             showAgent="true"
-                             showPin="false"
-                             showTags="false"
-                             showUsedByOtherBuildsIcon="true"/>
+                <tr>
+                    <bs:buildRow build="${entry}" rowClass="${rowClass}"
+                                 showBranchName="true"
+                                 maxBranchNameLength="15"
+                                 showBuildNumber="true"
+                                 showStatus="true"
+                                 showArtifacts="flase"
+                                 showChanges="true"
+                                 showStartDate="true"
+                                 showDuration="true"
+                                 showProgress="true"
+                                 showStop="false"
+                                 showAgent="true"
+                                 showPin="false"
+                                 showTags="false"
+                                 showUsedByOtherBuildsIcon="true"/>
                 </tr>
             </c:forEach>
             </table>
