@@ -14,3 +14,13 @@ This is how looks successful bisect for a failed build with 13 changes.  As you 
 ## Requirements
 
 The plugin targets TeamCity 9 and wasn't tested with other versions at the moment.  Like TeamCity 9 it supports Java 6-8.
+
+## Installation
+
+Steps to install TeamCity plugin according to the [official documentation][tc-plugin-install-doc]:
+
+1. Shutdown the TeamCity server.
+2. Copy the zip archive with the plugin into the <TeamCity Data Directory>/plugins directory.
+3. Start the TeamCity server: the plugin files will be unpacked and processed automatically. The plugin will be available in the Plugins List in the Administration area.
+
+[tc-plugin-install-doc]: https://confluence.jetbrains.com/display/TCD9/Installing+Additional+Plugins "Installing Additional Plugins"
