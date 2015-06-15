@@ -3,6 +3,8 @@ Bisect plugin for TeamCity
 
 Adds special tab on a build page from where you can run an automatic bisect.  Progress and results are also displayed on that tab.
 
+The tab is available for failed builds with multiple changes.
+
 ## Description
 
 Bisect operation itself is similar to bisect from Git ([doc](http://git-scm.com/docs/git-bisect)) or Mercurial ([doc](https://selenic.com/hg/help/bisect)).  The plugin leverages VCS-agnostic features of TeamCity so you can use it with any VCS supported by TeamCity.  However, the plugin was tested only with Git at the moment.
