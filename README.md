@@ -1,9 +1,7 @@
 # tc-bisect
 Bisect plugin for TeamCity
 
-Adds special tab on a build page from where you can run an automatic bisect.  Progress and results are also displayed on that tab.
-
-The tab is available for failed builds with multiple changes.
+Adds special tab on a build page from where you can run an automatic bisect.  Progress and results are also displayed on that tab.  The tab is available for failed builds with multiple changes.
 
 ## Description
 
