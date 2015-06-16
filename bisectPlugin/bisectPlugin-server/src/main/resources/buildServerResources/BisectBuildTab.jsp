@@ -27,7 +27,7 @@
             <c:choose>
                 <c:when test="${answer != null}">
                     <p>
-                        First modification with failed build is <bs:modificationLink modification="${answer}">${answer.displayVersion}"</bs:modificationLink>.  Author: <bs:changeCommitters modification="${answer}"/>.
+                        First modification with failed build is <bs:modificationLink modification="${answer}">${answer.displayVersion}</bs:modificationLink>.  Author: <bs:changeCommitters modification="${answer}"/>.
                     </p>
                 </c:when>
                 <c:otherwise>
