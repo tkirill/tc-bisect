@@ -33,10 +33,12 @@ public class BisectRepository {
         List<Bisect> result = new ArrayList<Bisect>();
 
         Map<String, String> values = storage.getValues();
-        for (String key : values.keySet()) {
-            Bisect bisect = tryParse(values.get(key));
-            if (bisect != null && !bisect.isFinished()) {
-                result.add(bisect);
+        if (values != null) {
+            for (String key : values.keySet()) {
+                Bisect bisect = tryParse(values.get(key));
+                if (bisect != null && !bisect.isFinished()) {
+                    result.add(bisect);
+                }
             }
         }
 

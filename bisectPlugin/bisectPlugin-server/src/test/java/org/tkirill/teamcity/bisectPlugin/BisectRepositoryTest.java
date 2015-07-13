@@ -66,6 +66,15 @@ public class BisectRepositoryTest {
     }
 
     @Test
+    public void GetAllNotFinished_Null_ReturnsEmpty() throws Exception {
+        stub(storage.getValues()).toReturn(null);
+
+        Bisect[] actual = sut.getAllNotFinished();
+
+        assertEquals(actual.length, 0);
+    }
+
+    @Test
     public void GetAllNotFinished_InvalidJson_ReturnsEmpty() throws Exception {
         Map<String, String> values = new HashMap<String, String>();
         values.put("10", "{foo: 3}");
