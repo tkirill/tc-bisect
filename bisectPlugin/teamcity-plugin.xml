@@ -3,7 +3,7 @@
   <info>
     <name>Bisect plugin</name>
     <display-name>Bisect plugin</display-name>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
     <description>Finds first failed commit in a build with multiple commits.  GitHub: https://github.com/tkirill/tc-bisect</description>
     <email>tkirill128@gmail.com</email>
     <vendor>
