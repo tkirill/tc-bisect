@@ -15,6 +15,10 @@ This is how looks successful bisect for a failed build with 13 changes.  As you 
 
 The plugin targets TeamCity 9 and wasn't tested with other versions at the moment.  Like TeamCity 9 it supports Java 6-8.
 
+## Status
+
+**The plugin isn't ready for production use yet.  It works but it often throws exceptions.  Fixing this is first task to do.**
+
 ## Installation
 
 Steps to install TeamCity plugin according to the [official documentation][tc-plugin-install-doc]:
